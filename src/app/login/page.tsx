@@ -2,14 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button, Card, Input, Section } from "@/components/ui";
 import PageShell from "@/components/PageShell";
 import Logo from "@/components/Logo";
 import { signIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,14 +24,25 @@ export default function LoginPage() {
         callbackURL: "/dashboard",
       });
       if (res.error) {
-        setError(res.error.message || "Invalid email or password");
+        const msg = res.error.message || "Invalid email or password";
+        // Surface origin/cookie issues more clearly in production
+        if (/origin|csrf|forbidden|failed to get/i.test(msg)) {
+          setError(
+            `${msg}. Production fix: set BETTER_AUTH_URL and NEXT_PUBLIC_APP_URL to this site’s HTTPS URL.`,
+          );
+        } else {
+          setError(msg);
+        }
         return;
       }
-      router.push("/dashboard");
-      router.refresh();
+      // Full navigation ensures session cookie is picked up
+      window.location.href = "/dashboard";
+      return;
     } catch (err) {
       console.error(err);
-      setError("Could not reach the auth server. Is the app running?");
+      setError(
+        "Could not reach the auth server. Check /api/health and production env vars.",
+      );
     } finally {
       setLoading(false);
     }

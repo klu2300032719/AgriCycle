@@ -2,14 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button, Card, Input, Section, Select } from "@/components/ui";
 import PageShell from "@/components/PageShell";
 import Logo from "@/components/Logo";
 import { signUp } from "@/lib/auth-client";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,14 +44,23 @@ export default function RegisterPage() {
         location?: string;
       });
       if (res.error) {
-        setError(res.error.message || "Registration failed");
+        const msg = res.error.message || "Registration failed";
+        if (/origin|csrf|forbidden|failed/i.test(msg)) {
+          setError(
+            `${msg}. Production fix: set BETTER_AUTH_URL and NEXT_PUBLIC_APP_URL to this site’s HTTPS URL, and run db:push.`,
+          );
+        } else {
+          setError(msg);
+        }
         return;
       }
-      router.push(role === "buyer" ? "/buyers" : "/sell");
-      router.refresh();
+      window.location.href = role === "buyer" ? "/buyers" : "/sell";
+      return;
     } catch (err) {
       console.error(err);
-      setError("Could not create account. Check server logs / .env.");
+      setError(
+        "Could not create account. Check /api/health, DATABASE_URL, and auth env vars.",
+      );
     } finally {
       setLoading(false);
     }
