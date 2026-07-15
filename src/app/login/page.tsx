@@ -24,28 +24,41 @@ export default function LoginPage() {
         callbackURL: "/dashboard",
       });
       if (res.error) {
+        const code = (res.error as { code?: string }).code || "";
         const msg = res.error.message || "Invalid email or password";
-        // Surface origin/cookie issues more clearly in production
-        if (/origin|csrf|forbidden|failed to get/i.test(msg)) {
+
+        if (/origin|csrf|forbidden/i.test(msg)) {
           setError(
-            `${msg}. Production fix: set BETTER_AUTH_URL and NEXT_PUBLIC_APP_URL to this site’s HTTPS URL.`,
+            `${msg}. Set BETTER_AUTH_URL and NEXT_PUBLIC_APP_URL to this site’s HTTPS URL, then redeploy.`,
+          );
+        } else if (
+          code === "INVALID_EMAIL_OR_PASSWORD" ||
+          /invalid email or password/i.test(msg)
+        ) {
+          setError(
+            "No account matches this email + password. Use Create account if you’re new, or Forgot password to reset. Demo: demo@agricycle.app / AgriCycle@2026 (after running seed-demo-user).",
           );
         } else {
           setError(msg);
         }
         return;
       }
-      // Full navigation ensures session cookie is picked up
       window.location.href = "/dashboard";
       return;
     } catch (err) {
       console.error(err);
       setError(
-        "Could not reach the auth server. Check /api/health and production env vars.",
+        "Could not reach the auth server. Open /api/health on this domain to diagnose.",
       );
     } finally {
       setLoading(false);
     }
+  }
+
+  function fillDemo() {
+    setEmail("demo@agricycle.app");
+    setPassword("AgriCycle@2026");
+    setError("");
   }
 
   return (
@@ -74,7 +87,14 @@ export default function LoginPage() {
               onChange={setPassword}
               placeholder="••••••••"
             />
-            <div className="text-right">
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={fillDemo}
+                className="text-xs font-medium text-muted underline-offset-2 hover:text-green hover:underline"
+              >
+                Use demo login
+              </button>
               <Link
                 href="/forgot-password"
                 className="text-xs font-medium text-green hover:underline"
@@ -96,6 +116,12 @@ export default function LoginPage() {
             <Link href="/register" className="font-semibold text-green">
               Create one
             </Link>
+          </p>
+          <p className="mt-3 rounded-lg bg-surface px-3 py-2 text-center text-[11px] leading-relaxed text-muted">
+            New production deploys start with an empty user table. Register once,
+            or run{" "}
+            <code className="text-foreground">npm run db:demo-user</code> then
+            sign in with the demo credentials.
           </p>
         </Card>
       </Section>

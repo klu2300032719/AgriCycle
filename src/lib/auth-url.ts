@@ -77,10 +77,12 @@ export function getTrustedOrigins(): string[] {
   return Array.from(origins);
 }
 
+/** True when the app is served over HTTPS (Vercel / real prod host). */
 export function isProductionRuntime(): boolean {
-  return (
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production" ||
-    process.env.VERCEL_ENV === "preview"
-  );
+  // Prefer Vercel flags — local `next start` should NOT force Secure cookies on http://
+  if (process.env.VERCEL === "1" || process.env.VERCEL_ENV) {
+    return true;
+  }
+  const base = getAuthBaseURL();
+  return base.startsWith("https://");
 }
