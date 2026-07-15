@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="public/agricycle-preview.png" alt="AgriCycle — Farm Waste Marketplace" width="100%" />
-</p>
+<img width="1253" height="931" alt="Screenshot 2026-07-15 153827" src="https://github.com/user-attachments/assets/ff7c4316-b121-4955-884b-7863bcb7b0b9" />
+
 
 # AgriCycle — Farm Waste Marketplace
 
