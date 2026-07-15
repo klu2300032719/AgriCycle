@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AgriWasteX — Farm Waste Exchange Platform
 
-## Getting Started
+Full-stack marketplace for agricultural waste: farmers sell crop residue, banana stems, coconut shells, sugarcane waste, rice husk, and animal manure to mushroom farms, biofuel companies, compost manufacturers, paper industries, and dairy farms.
 
-First, run the development server:
+## Theme
+
+**White · Black · Green** — white background, Inter (sans) body type, **Instrument Serif** headings.
+
+## Stack
+
+- **Next.js 16** (App Router) · **React 19** · **TypeScript** · **Tailwind CSS 4**
+- **Neon Postgres** via **Drizzle ORM**
+- **Better Auth** (email/password)
+- **Groq** LLM for AI price prediction (with linear-regression fallback)
+- Logistic-style waste **grading** (A/B/C)
+
+## Features
+
+| Feature | Route | Backend |
+|--------|--------|---------|
+| Landing | `/` | Static catalog |
+| Live marketplace | `/marketplace` | `GET /api/listings` |
+| Nearby buyers | `/buyers` | `GET /api/buyers` |
+| AI price prediction | `/price-predict` | `POST /api/price-predict` (Groq) |
+| List waste + estimate | `/sell` | `POST /api/estimate`, `POST /api/listings` |
+| Transport booking | `/transport` | `POST /api/transport` |
+| Analytics + payments | `/dashboard` | `GET /api/dashboard` |
+| Auth | `/login`, `/register` | `/api/auth/*` |
+
+## Environment
+
+Copy `.env.example` → `.env` (or use the provided Neon / Groq keys):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+DATABASE_URL=          # Neon connection string
+GROQ_API_KEY=          # Groq API key
+BETTER_AUTH_SECRET=    # ≥32 characters
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run db:push      # create tables on Neon
+npm run db:seed      # seed listings, buyers, transactions
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+```bash
+npm run build
+npm run start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/                 # pages + API routes
+  app/api/             # listings, buyers, transport, price-predict, dashboard, auth
+  components/          # Navbar, Footer, UI
+  data/mock.ts         # static catalog (waste types, features, stats)
+  db/                  # Drizzle schema, client, seed
+  lib/                 # auth, AI, types
+```
