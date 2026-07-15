@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/agricycle-preview.png" alt="AgriCycle — Farm Waste Marketplace" width="100%" />
+</p>
+
 # AgriCycle — Farm Waste Marketplace
 
 Full-stack marketplace for agricultural waste: farmers sell crop residue, banana stems, coconut shells, sugarcane waste, rice husk, and animal manure to mushroom farms, biofuel companies, compost manufacturers, paper industries, and dairy farms.
