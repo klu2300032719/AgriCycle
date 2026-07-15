@@ -33,12 +33,15 @@ const statusStyle: Record<
 };
 
 type DashData = {
+  scoped?: boolean;
   stats: {
     totalEarned: number;
     pending: number;
+    inEscrow?: number;
     wasteSold: number;
     co2Avoided: number;
     activeListings: number;
+    openOffers?: number;
   };
   transactions: Transaction[];
   priceHistory: PricePoint[];
@@ -73,9 +76,11 @@ export default function DashboardPage() {
   const stats = data?.stats || {
     totalEarned: 0,
     pending: 0,
+    inEscrow: 0,
     wasteSold: 0,
     co2Avoided: 0,
     activeListings: 0,
+    openOffers: 0,
   };
   const transactions = data?.transactions || [];
   const priceHistory = data?.priceHistory || [];
@@ -265,7 +270,7 @@ export default function DashboardPage() {
                   <div className="flex justify-between rounded-lg bg-surface px-3 py-3 text-sm">
                     <span className="text-muted">In escrow</span>
                     <span className="font-semibold text-foreground">
-                      ₹18,000
+                      ₹{(stats.inEscrow || 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between rounded-lg bg-surface px-3 py-3 text-sm">

@@ -1,18 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   Brain,
   Leaf,
-  MapPin,
-  Recycle,
   ShieldCheck,
   Sparkles,
   Truck,
-  TrendingUp,
-  Zap,
 } from "lucide-react";
 import {
   Badge,
@@ -51,21 +48,14 @@ export default function HomePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden bg-mesh">
-        <div className="pointer-events-none absolute inset-0 bg-grid" />
-        <div className="orb orb-green -left-20 top-10 h-72 w-72 opacity-60" />
-        <div
-          className="orb orb-lime right-0 top-40 h-64 w-64 opacity-50"
-          style={{ animationDelay: "-4s" }}
-        />
-
+      <div className="relative overflow-hidden bg-white">
         <Section className="relative pb-16 pt-14 sm:pb-24 sm:pt-20 lg:pt-24">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <motion.div
               variants={stagger}
               initial="hidden"
               animate="show"
-              className="relative z-10"
+              className="relative z-10 max-w-xl"
             >
               <motion.div variants={fadeUp}>
                 <span className="inline-flex items-center gap-2 rounded-full border border-green/20 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-green shadow-sm backdrop-blur">
@@ -86,7 +76,7 @@ export default function HomePage() {
                 variants={fadeUp}
                 className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
               >
-                AgriWasteX connects farmers selling crop residue, banana stems,
+                AgriCycle connects farmers selling crop residue, banana stems,
                 coconut shells, rice husk and manure with mushroom farms,
                 biofuel plants, compost makers, and paper industries.
               </motion.p>
@@ -123,103 +113,29 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
 
-            {/* Hero visual */}
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="absolute -inset-8 rounded-[2rem] bg-gradient-to-br from-green/15 via-transparent to-green/5 blur-2xl" />
-
-              <motion.div
-                initial={{ opacity: 0, y: 40, rotate: -2 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: easeOut }}
-                className="relative space-y-3"
-              >
-                <motion.div
-                  className="animate-float shine-border rounded-2xl border border-green/15 bg-white/90 p-5 shadow-[var(--shadow-lift)] backdrop-blur-xl"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="live-dot" />
-                        <p className="text-xs font-medium text-muted">
-                          Live listing
-                        </p>
-                      </div>
-                      <p className="mt-2 text-lg font-bold text-foreground">
-                        Rice Husk · 12 tonnes
-                      </p>
-                      <p className="mt-1 text-sm text-muted">
-                        Thanjavur · Grade A · 8% moisture
-                      </p>
-                    </div>
-                    <Badge variant="green">₹3,200/t</Badge>
-                  </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-green" /> 18 km away
-                    </span>
-                    <span className="font-medium text-green">
-                      3 buyers interested
-                    </span>
-                  </div>
-                </motion.div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.45, duration: 0.55, ease: easeOut }}
-                    className="animate-float-slow rounded-2xl border border-border bg-white p-4 shadow-[var(--shadow-soft)]"
-                  >
-                    <TrendingUp className="h-5 w-5 text-green" />
-                    <p className="mt-3 text-2xl font-bold text-foreground">
-                      +24%
-                    </p>
-                    <p className="text-xs text-muted">Price vs last season</p>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.55, duration: 0.55, ease: easeOut }}
-                    className="rounded-2xl border border-border bg-white p-4 shadow-[var(--shadow-soft)]"
-                    style={{ animationDelay: "-2s" }}
-                  >
-                    <Recycle className="h-5 w-5 text-green" />
-                    <p className="mt-3 text-2xl font-bold text-foreground">
-                      2.4 t
-                    </p>
-                    <p className="text-xs text-muted">CO₂ saved this week</p>
-                  </motion.div>
-                </div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 0.55, ease: easeOut }}
-                  className="rounded-2xl border border-green/25 bg-gradient-to-r from-green-dim to-white p-4 shadow-[var(--shadow-soft)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green text-white shadow-lg shadow-green/30">
-                      <Zap className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        AI suggests: sell rice husk now
-                      </p>
-                      <p className="text-xs text-muted">
-                        Peak demand from biofuel plants this week
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </div>
+            {/* Hero image — foreground, not background */}
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.15, ease: easeOut }}
+              className="relative mx-auto w-full max-w-lg lg:max-w-none"
+            >
+              <div className="relative aspect-[4/5] w-full sm:aspect-[5/6] lg:aspect-[4/5]">
+                <Image
+                  src="/gardener-hero.jpg"
+                  alt="The Gardener — illustration of tending the land"
+                  fill
+                  priority
+                  className="object-contain object-center drop-shadow-none"
+                  sizes="(max-width: 1024px) 90vw, 48vw"
+                />
+              </div>
+            </motion.div>
           </div>
         </Section>
 
         {/* Marquee */}
-        <div className="relative border-y border-border/80 bg-white/60 py-4 backdrop-blur">
+        <div className="relative border-y border-border bg-white py-4">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white to-transparent sm:w-24" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white to-transparent sm:w-24" />
           <div className="flex overflow-hidden">
@@ -249,67 +165,133 @@ export default function HomePage() {
         </RevealStagger>
       </Section>
 
-      {/* Problem / Solution */}
+      {/* Problem / Solution / Care — each illustration once, transparent bg */}
       <Section className="pb-16 sm:pb-20">
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-3">
           <Reveal>
             <Card
               hover={false}
-              className="h-full overflow-hidden bg-gradient-to-br from-white to-surface"
+              className="flex h-full flex-col overflow-hidden border-border bg-white !p-0"
             >
-              <Badge variant="outline">The problem</Badge>
-              <h3 className="mt-4 text-xl font-bold text-foreground sm:text-2xl">
-                Every season, residue goes up in smoke
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-                Farmers burn crop residue or dump organic waste because there is
-                no easy market. That poisons air quality, wastes nutrients, and
-                leaves money on the field.
-              </p>
-              <ul className="mt-6 space-y-3 text-sm text-muted">
-                {[
-                  "Stubble burning & illegal dumping",
-                  "No local buyer discovery",
-                  "Uncertain prices & transport costs",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-50 text-xs text-red-500">
-                      ✕
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <div className="relative flex h-56 w-full items-center justify-center bg-transparent px-4 pt-6 sm:h-64">
+                <Image
+                  src="/illust-farmer.png"
+                  alt="Farmer carrying a basket of harvest"
+                  width={400}
+                  height={560}
+                  className="mx-auto h-full w-auto max-h-56 max-w-full object-contain sm:max-h-60"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  priority
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
+                <Badge variant="outline">The problem</Badge>
+                <h3 className="mt-4 text-lg font-bold text-foreground sm:text-xl">
+                  Residue goes up in smoke
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  No easy market means stubble burning, dumped waste, and money
+                  left on the field.
+                </p>
+                <ul className="mt-5 space-y-2.5 text-sm text-muted">
+                  {[
+                    "Stubble burning & dumping",
+                    "No local buyer discovery",
+                    "Uncertain prices & transport",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-50 text-[10px] text-red-500">
+                        ✕
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
           </Reveal>
-          <Reveal delay={0.12}>
+
+          <Reveal delay={0.08}>
             <Card
               hover={false}
-              className="h-full overflow-hidden border-green/25 bg-gradient-to-br from-green-dim via-white to-white"
+              className="flex h-full flex-col overflow-hidden border-green/25 bg-white !p-0"
             >
-              <Badge variant="green">The solution</Badge>
-              <h3 className="mt-4 text-xl font-bold text-foreground sm:text-2xl">
-                A dedicated exchange for agricultural waste
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-                List waste in minutes, get AI price guidance, match with nearby
-                industrial buyers, book transport, grade quality, and track
-                payments — all in one platform built for farms.
-              </p>
-              <ul className="mt-6 space-y-3 text-sm text-muted">
-                {[
-                  "Sell residue instead of burning it",
-                  "Fair rates powered by AI & demand",
-                  "Logistics + payments + analytics",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green text-xs text-white">
-                      ✓
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <div className="relative flex h-56 w-full items-center justify-center bg-transparent px-4 pt-6 sm:h-64">
+                <Image
+                  src="/illust-harvest.png"
+                  alt="Harvest carried to market"
+                  width={400}
+                  height={400}
+                  className="mx-auto h-full w-auto max-h-56 max-w-full object-contain sm:max-h-60"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
+                <Badge variant="green">The solution</Badge>
+                <h3 className="mt-4 text-lg font-bold text-foreground sm:text-xl">
+                  A farm waste exchange
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  List waste, get AI price guidance, match buyers, book
+                  transport, and track payments.
+                </p>
+                <ul className="mt-5 space-y-2.5 text-sm text-muted">
+                  {[
+                    "Sell residue instead of burning",
+                    "Fair AI-assisted rates",
+                    "Logistics + payout tracking",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green text-[10px] text-white">
+                        ✓
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Card>
+          </Reveal>
+
+          <Reveal delay={0.16}>
+            <Card
+              hover={false}
+              className="flex h-full flex-col overflow-hidden border-border bg-white !p-0"
+            >
+              <div className="relative flex h-56 w-full items-center justify-center bg-transparent px-4 pt-6 sm:h-64">
+                <Image
+                  src="/illust-garden.png"
+                  alt="Tending plants and growing value from the land"
+                  width={360}
+                  height={560}
+                  className="mx-auto h-full w-auto max-h-56 max-w-full object-contain sm:max-h-60"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
+                <Badge variant="default">The impact</Badge>
+                <h3 className="mt-4 text-lg font-bold text-foreground sm:text-xl">
+                  Grow income, not smoke
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  Turn leftover biomass into feedstock for industry — cleaner
+                  air, circular farms, extra rural income.
+                </p>
+                <ul className="mt-5 space-y-2.5 text-sm text-muted">
+                  {[
+                    "Less open burning",
+                    "Circular agri-economy",
+                    "Extra farmer earnings",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-dim text-[10px] font-bold text-green">
+                        ·
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
           </Reveal>
         </div>
@@ -321,7 +303,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Waste catalog"
             title="What farmers can sell"
-            subtitle="From field leftovers to animal manure — if industry can use it, AgriWasteX can move it."
+            subtitle="From field leftovers to animal manure — if industry can use it, AgriCycle can move it."
           />
         </Reveal>
         <RevealStagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -428,7 +410,7 @@ export default function HomePage() {
             <div className="relative max-w-2xl">
               <Badge variant="green">
                 <Sparkles className="mr-1.5 inline h-3 w-3" />
-                Why AgriWasteX is unique
+                Why AgriCycle is unique
               </Badge>
               <h2 className="mt-5 font-serif text-2xl tracking-tight text-foreground sm:text-3xl md:text-4xl">
                 Almost nobody builds software just for farm waste — yet
@@ -441,7 +423,7 @@ export default function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/dashboard" className="btn-primary">
-                  View analytics demo
+                  View analytics
                 </Link>
                 <Link href="/price-predict" className="btn-ghost">
                   Try AI pricing
@@ -456,7 +438,7 @@ export default function HomePage() {
       <Section className="pb-20 sm:pb-28">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-border bg-foreground px-6 py-14 text-center text-white sm:px-12 sm:py-16">
-            <div className="pointer-events-none absolute inset-0 opacity-30">
+            <div className="pointer-events-none absolute inset-0 opacity-40">
               <div className="absolute left-1/4 top-0 h-40 w-40 rounded-full bg-green blur-3xl" />
               <div className="absolute bottom-0 right-1/4 h-48 w-48 rounded-full bg-green-light blur-3xl" />
             </div>

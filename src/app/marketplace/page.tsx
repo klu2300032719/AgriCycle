@@ -224,15 +224,14 @@ export default function MarketplacePage() {
                     </span>
                     <span>{l.postedAt}</span>
                   </div>
-                  <button
-                    type="button"
-                    className="btn-primary mt-3 w-full !rounded-xl disabled:opacity-40"
-                    disabled={l.status !== "available"}
+                  <a
+                    href={`/marketplace/${l.id}`}
+                    className={`btn-primary mt-3 w-full !rounded-xl text-center ${
+                      l.status !== "available" ? "pointer-events-none opacity-40" : ""
+                    }`}
                   >
-                    {l.status === "available"
-                      ? "Contact seller"
-                      : "Unavailable"}
-                  </button>
+                    {l.status === "available" ? "View & offer" : "Unavailable"}
+                  </a>
                 </Card>
               </motion.div>
             ))}

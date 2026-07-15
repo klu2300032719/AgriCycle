@@ -3,9 +3,9 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Leaf } from "lucide-react";
 import { Button, Card, Input, Section } from "@/components/ui";
 import PageShell from "@/components/PageShell";
+import Logo from "@/components/Logo";
 import { signIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
@@ -20,15 +20,20 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await signIn.email({ email, password });
+      const res = await signIn.email({
+        email: email.trim().toLowerCase(),
+        password,
+        callbackURL: "/dashboard",
+      });
       if (res.error) {
-        setError(res.error.message || "Sign in failed");
+        setError(res.error.message || "Invalid email or password");
         return;
       }
       router.push("/dashboard");
       router.refresh();
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      console.error(err);
+      setError("Could not reach the auth server. Is the app running?");
     } finally {
       setLoading(false);
     }
@@ -38,14 +43,10 @@ export default function LoginPage() {
     <PageShell className="pb-20 pt-12">
       <Section>
         <Card hover={false} className="mx-auto max-w-md border-green/15">
-          <div className="mb-6 flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-green to-green-dark text-white">
-              <Leaf className="h-5 w-5" />
-            </span>
-            <div>
-              <h1 className="font-serif text-2xl text-foreground">Sign in</h1>
-              <p className="text-sm text-muted">Access your AgriWasteX account</p>
-            </div>
+          <div className="mb-6">
+            <Logo size={44} compact href={null} />
+            <h1 className="mt-4 font-serif text-2xl text-foreground">Sign in</h1>
+            <p className="text-sm text-muted">Access your AgriCycle account</p>
           </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <Input
@@ -64,12 +65,20 @@ export default function LoginPage() {
               onChange={setPassword}
               placeholder="••••••••"
             />
+            <div className="text-right">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-green hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
             {error && (
               <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
                 {error}
               </p>
             )}
-            <Button className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in…" : "Sign in"}
             </Button>
           </form>

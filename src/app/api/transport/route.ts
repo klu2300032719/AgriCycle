@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { desc } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "@/db";
 import { shipments } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { distanceBetweenLocations } from "@/lib/geo";
 
 const FLEET: Record<
   string,
@@ -35,23 +37,21 @@ const FLEET: Record<
   },
 };
 
-function estimateDistance(pickup: string, drop: string): number {
-  // Simple hash-based demo distance; real app would use maps API
-  const key = `${pickup}|${drop}`.toLowerCase();
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
-  }
-  return 80 + (hash % 220);
-}
-
 export async function GET() {
   try {
-    const rows = await db
+    const session = await auth.api.getSession({ headers: await headers() });
+    let rows = await db
       .select()
       .from(shipments)
       .orderBy(desc(shipments.createdAt))
       .limit(20);
+
+    if (session?.user) {
+      const role = (session.user as { role?: string }).role;
+      if (role !== "admin") {
+        rows = rows.filter((s) => s.userId === session.user.id);
+      }
+    }
 
     return NextResponse.json({
       fleet: Object.entries(FLEET).map(([id, v]) => ({
@@ -73,23 +73,46 @@ export async function GET() {
   }
 }
 
+const bookSchema = z.object({
+  pickup: z.string().min(1).max(200),
+  drop: z.string().min(1).max(200).optional(),
+  dropoff: z.string().min(1).max(200).optional(),
+  load: z.number().positive().optional(),
+  loadTonnes: z.number().positive().optional(),
+  wasteType: z.string().min(1),
+  vehicleId: z.string().optional(),
+  selected: z.string().optional(),
+  listingId: z.string().optional(),
+  offerId: z.string().optional(),
+});
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const pickup = body.pickup || "Thanjavur";
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "Sign in to book transport" },
+        { status: 401 },
+      );
+    }
+
+    const body = bookSchema.parse(await request.json());
+    const pickup = body.pickup;
     const drop = body.drop || body.dropoff || "Coimbatore";
-    const load = Number(body.load || body.loadTonnes || 8);
-    const wasteType = body.wasteType || "Rice Husk";
+    const load = body.load || body.loadTonnes || 8;
+    const wasteType = body.wasteType;
     const vehicleId = body.vehicleId || body.selected || "TR-02";
     const vehicle = FLEET[vehicleId] || FLEET["TR-02"];
-    const distanceKm = Number(body.distanceKm) || estimateDistance(pickup, drop);
+    const distanceKm = distanceBetweenLocations(pickup, drop);
     const cost = distanceKm * vehicle.ratePerKm;
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
     const id = `SHP-${Date.now().toString(36).toUpperCase()}`;
+    const drivers = [
+      { name: "Ravi Kumar", phone: "+91 98xxx 12001" },
+      { name: "Senthil N", phone: "+91 98xxx 12002" },
+      { name: "Anitha R", phone: "+91 98xxx 12003" },
+    ];
+    const driver = drivers[Math.floor(Math.random() * drivers.length)];
 
     const [row] = await db
       .insert(shipments)
@@ -104,7 +127,11 @@ export async function POST(request: NextRequest) {
         distanceKm,
         cost,
         status: "booked",
-        userId: session?.user?.id ?? null,
+        listingId: body.listingId ?? null,
+        offerId: body.offerId ?? null,
+        driverName: driver.name,
+        driverPhone: driver.phone,
+        userId: session.user.id,
       })
       .returning();
 
@@ -121,6 +148,9 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.issues[0]?.message }, { status: 400 });
+    }
     console.error("POST /api/transport", error);
     return NextResponse.json(
       { error: "Failed to book transport" },

@@ -136,18 +136,21 @@ export default function BuyersPage() {
                 </div>
 
                 <div className="mt-5 flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary flex-1 !rounded-xl"
+                  <a
+                    href="/marketplace"
+                    className="btn-primary flex-1 !rounded-xl text-center"
                   >
-                    Send offer
-                  </button>
-                  <button
-                    type="button"
+                    Find matching waste
+                  </a>
+                  <a
+                    href={`mailto:${encodeURIComponent(
+                      (b as { contactEmail?: string }).contactEmail ||
+                        "hello@agricycle.example",
+                    )}?subject=AgriCycle%20supply%20inquiry`}
                     className="btn-ghost !rounded-xl !px-4"
                   >
-                    Profile
-                  </button>
+                    Contact
+                  </a>
                 </div>
               </Card>
             </motion.div>

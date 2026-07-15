@@ -18,7 +18,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "AgriWasteX — Farm Waste Exchange Platform",
+  title: "AgriCycle — Farm Waste Marketplace",
   description:
     "Sell crop residue, banana stems, coconut shells, sugarcane waste, rice husk & manure to mushroom farms, biofuel companies, compost manufacturers and more. AI pricing, transport & analytics.",
   keywords: [
@@ -28,6 +28,11 @@ export const metadata: Metadata = {
     "biofuel feedstock",
     "stubble burning alternative",
   ],
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

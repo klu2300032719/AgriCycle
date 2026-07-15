@@ -406,9 +406,10 @@ export const features = [
   },
 ];
 
+/** Illustrative targets for pitch decks — not live production metrics */
 export const stats = [
-  { label: "Farmers onboarded", value: "2,400+" },
-  { label: "Waste diverted (tonnes)", value: "18,500" },
-  { label: "Avg. farmer earnings", value: "₹42k/yr" },
-  { label: "CO₂ prevented", value: "6,200 t" },
+  { label: "Pilot district focus", value: "TN first" },
+  { label: "Waste types supported", value: "6" },
+  { label: "Buyer categories", value: "5" },
+  { label: "Platform fee (target)", value: "3%" },
 ];

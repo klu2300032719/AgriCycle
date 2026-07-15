@@ -97,6 +97,10 @@ export default function SellPage() {
         }),
       });
       const data = await res.json();
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       if (!res.ok) throw new Error(data.error || "Publish failed");
       setSubmitted(true);
     } catch (e) {
@@ -353,7 +357,7 @@ export default function SellPage() {
               {submitting ? "Publishing…" : "Publish listing"}
             </Button>
             <p className="text-center text-xs text-muted">
-              Saves to Neon Postgres · grading via AI classification model
+              Sign in required to publish · graded automatically · saved to database
             </p>
           </div>
         </div>

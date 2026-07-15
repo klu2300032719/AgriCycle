@@ -5,9 +5,9 @@ import {
   buyers,
   listings,
   priceHistory,
-  shipments,
   transactions,
 } from "./schema";
+import { resolveCoords } from "../lib/geo";
 
 const connectionString =
   process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
@@ -128,7 +128,10 @@ const seedListings = [
     status: "available",
     postedAt: "2026-07-07",
   },
-];
+].map((l) => {
+  const c = resolveCoords(l.location);
+  return { ...l, lat: c?.lat ?? null, lng: c?.lng ?? null };
+});
 
 const seedBuyers = [
   {
@@ -141,6 +144,8 @@ const seedBuyers = [
     rateRange: "₹1.5–3.2/kg",
     rating: 4.8,
     verified: true,
+    contactEmail: "buy@mycogrow.example",
+    contactPhone: "+91 90000 00001",
   },
   {
     id: "BUY-202",
@@ -152,6 +157,8 @@ const seedBuyers = [
     rateRange: "₹2–5/kg",
     rating: 4.6,
     verified: true,
+    contactEmail: "procurement@greenflame.example",
+    contactPhone: "+91 90000 00002",
   },
   {
     id: "BUY-203",
@@ -163,6 +170,8 @@ const seedBuyers = [
     rateRange: "₹1–2.5/kg",
     rating: 4.5,
     verified: true,
+    contactEmail: "ops@earthcycle.example",
+    contactPhone: "+91 90000 00003",
   },
   {
     id: "BUY-204",
@@ -174,6 +183,8 @@ const seedBuyers = [
     rateRange: "₹1.2–2.8/kg",
     rating: 4.3,
     verified: false,
+    contactEmail: "buy@southpaper.example",
+    contactPhone: "+91 90000 00004",
   },
   {
     id: "BUY-205",
@@ -185,6 +196,8 @@ const seedBuyers = [
     rateRange: "₹1–2/kg",
     rating: 4.7,
     verified: true,
+    contactEmail: "hub@amuldairy.example",
+    contactPhone: "+91 90000 00005",
   },
   {
     id: "BUY-206",
@@ -196,8 +209,13 @@ const seedBuyers = [
     rateRange: "₹3–6/kg",
     rating: 4.4,
     verified: true,
+    contactEmail: "feedstock@biochar.example",
+    contactPhone: "+91 90000 00006",
   },
-];
+].map((b) => {
+  const c = resolveCoords(b.location);
+  return { ...b, lat: c?.lat ?? null, lng: c?.lng ?? null };
+});
 
 const seedTxns = [
   {
@@ -205,7 +223,10 @@ const seedTxns = [
     listing: "Rice Husk – 8t",
     buyer: "GreenFlame Biofuels",
     amount: 25600,
+    platformFee: 768,
+    escrowAmount: 0,
     status: "completed",
+    paymentMethod: "manual",
     date: "2026-07-05",
   },
   {
@@ -213,7 +234,10 @@ const seedTxns = [
     listing: "Banana Stems – 3t",
     buyer: "EarthCycle Compost",
     amount: 3300,
+    platformFee: 99,
+    escrowAmount: 3300,
     status: "in_transit",
+    paymentMethod: "manual",
     date: "2026-07-08",
   },
   {
@@ -221,7 +245,10 @@ const seedTxns = [
     listing: "Paddy Straw – 10t",
     buyer: "MycoGrow Mushrooms",
     amount: 18000,
-    status: "paid",
+    platformFee: 540,
+    escrowAmount: 18000,
+    status: "in_escrow",
+    paymentMethod: "upi",
     date: "2026-07-10",
   },
   {
@@ -229,7 +256,10 @@ const seedTxns = [
     listing: "Cattle Manure – 5t",
     buyer: "EarthCycle Compost",
     amount: 11000,
+    platformFee: 330,
+    escrowAmount: 0,
     status: "pending",
+    paymentMethod: "manual",
     date: "2026-07-12",
   },
   {
@@ -237,7 +267,10 @@ const seedTxns = [
     listing: "Coconut Shells – 2t",
     buyer: "BioChar Tamil Nadu",
     amount: 9600,
+    platformFee: 288,
+    escrowAmount: 0,
     status: "completed",
+    paymentMethod: "bank",
     date: "2026-07-01",
   },
 ];
@@ -253,13 +286,7 @@ const seedPrices = [
 ];
 
 async function main() {
-  console.log("Seeding AgriWasteX database…");
-
-  await db.delete(shipments);
-  await db.delete(transactions);
-  await db.delete(listings);
-  await db.delete(buyers);
-  await db.delete(priceHistory);
+  console.log("Seeding AgriCycle database…");
 
   await db.insert(listings).values(seedListings);
   await db.insert(buyers).values(seedBuyers);
@@ -272,6 +299,10 @@ async function main() {
     transactions: seedTxns.length,
     priceHistory: seedPrices.length,
   });
+  console.log(
+    "\nCreate an account at /register (farmer or buyer).\n" +
+      "First admin: set role='admin' in DB for your user email.\n",
+  );
 }
 
 main().catch((err) => {

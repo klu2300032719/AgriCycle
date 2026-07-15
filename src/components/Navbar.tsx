@@ -4,15 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Leaf, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { easeOut } from "@/components/motion";
 import { signOut, useSession } from "@/lib/auth-client";
+import Logo from "@/components/Logo";
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/marketplace", label: "Marketplace" },
   { href: "/buyers", label: "Buyers" },
   { href: "/price-predict", label: "AI Pricing" },
+  { href: "/offers", label: "Offers" },
   { href: "/transport", label: "Transport" },
   { href: "/dashboard", label: "Dashboard" },
 ];
@@ -49,22 +51,9 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-2.5">
-          <motion.span
-            whileHover={{ rotate: -8, scale: 1.06 }}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-green to-green-dark text-white shadow-lg shadow-green/25"
-          >
-            <Leaf className="h-5 w-5" strokeWidth={2.2} />
-          </motion.span>
-          <div className="leading-tight">
-            <span className="block font-serif text-base tracking-tight text-foreground sm:text-lg">
-              AgriWaste<span className="text-green">X</span>
-            </span>
-            <span className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-muted sm:block">
-              Farm Waste Exchange
-            </span>
-          </div>
-        </Link>
+        <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+          <Logo size={40} />
+        </motion.div>
 
         <ul className="hidden items-center gap-0.5 rounded-full border border-border/70 bg-surface/70 p-1 lg:flex">
           {links.map((link) => {
@@ -94,7 +83,13 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           {session?.user ? (
             <div className="hidden items-center gap-2 sm:flex">
-              <span className="max-w-[120px] truncate text-xs font-medium text-muted">
+              <Link
+                href="/offers"
+                className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition hover:border-green/30 hover:text-foreground"
+              >
+                Offers
+              </Link>
+              <span className="max-w-[100px] truncate text-xs font-medium text-muted">
                 {session.user.name}
               </span>
               <button
